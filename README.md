@@ -3,7 +3,7 @@
 To run the app execute java -jar api-service-0.0.1.jar the jar file is located under /bin.
 - The app will run on port 8080
 - The account with id 1 will be created automatically 
-
+- front end url /api 
 
 ###  debit operation method post url api/accounts/debit
 

@@ -1,14 +1,118 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="../../assets/ico/favicon.png">
 
-	<head>
-		<title>Welcome page</title>
-	</head>
+	<title>Transactions</title>
 
-	<body>
+	<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<!-- Custom styles for this template -->
+	<link href="starter-template.css" rel="stylesheet">
 
-		<h1>Welcome</h1>
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="../../assets/js/html5shiv.js"></script>
+	<script src="../../assets/js/respond.min.js"></script>
+	<![endif]-->
+
+	<script>
+
+    const fillData = (account) => {
+			$('#accountId').html(account.account_id);
+            $('#balance').html(account.balance);
+            let txId = 0;
+            $( '#accordionGroup' ).empty();
+            account.transactions.forEach((transaction) => {
+            const accordionItem= $('<div class="accordion-heading transaction'+txId+'">'+
+									'<a class="accordion-toggle" data-toggle="collapse" href="#transaction'+txId+'">'+ transaction.transaction_type +'  '+ transaction.amount +'</a>'+
+									'</div>'+
+									'<div id="transaction'+txId+'" class="accordion-body collapse">'+
+										'<div class="accordion-inner">'+
+											'<table class="table table-striped table-condensed">'+
+												'<thead>'+
+												'<tr>'+
+													'<th>TYPE</th>'+
+													'<th>DATE</th>'+
+													'<th>AMOUNT</th>'+
+												'</tr>'+
+												'</thead>'+
+												'<tbody>'+
+												'<tr>'+
+												'<tr>'+
+													'<th>'+transaction.transaction_type+'</th>'+
+													'<th>'+transaction.date+'</th>'+
+													'<th>'+transaction.amount+'</th>'+
+												'</tr>'+
+												'</tbody>'+
+											'</table>'+
+										'</div>'+
+									'</div>');
+			$('#accordionGroup').append(accordionItem);
+			 txId++;
+           });
+    };
+
+    const fetchTransactions = () => {
+			axios.get('http://127.0.0.1:8080/api/accounts/1/ledger')
+				.then(response => {
+					console.log(response);
+					const account = response.data;
+					console.log(`transactions`, account);
+                    fillData(account)
+				})
+				.catch(error => console.error(error));
+     };
 
 
-	</body>
 
+
+
+
+	</script>
+
+</head>
+
+<body>
+
+
+
+<div class="container">
+
+	<div class="starter-template">
+		<h1>Transactions</h1>
+
+	</div>
+
+	<div>
+		<div class="menu">
+
+			<button class="btn btn-primary" type="button" onclick="fetchTransactions()">load</button>
+			<br /><br />
+			 account id :<span class="font-weight-bold" id="accountId">0</span> <br />
+			 balance :<span class="font-weight-bold" id="balance">0</span> <br />
+
+			<div class="accordion">
+				<div class="accordion-group" id="accordionGroup">
+
+
+
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+</body>
 </html>
